@@ -1,0 +1,6 @@
+# Whitelist: only the web page is published. Photos, PDFs and notes stay local.
+*
+!.gitignore
+!index.html
+!icon.png
+!README.md
