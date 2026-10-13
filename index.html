@@ -361,6 +361,27 @@ FIG.facepull={dur:3,
     {id:'fa',p:'ua',len:14,a:85,x:wt(3.5)}],
   poses:[{t:0,a:{ua:95,fa:85}},{t:50,a:{ua:300,fa:86}},{t:100,a:{ua:95,fa:85}}]};
 
+FIG.calf={dur:2.4,pre:F(92)+ln(62,88,84,88,'pad'),
+  nodes:[
+    {id:'ft',at:[76,86],len:12,a:-90},
+    {id:'sh',p:'ft',len:22,a:0},
+    {id:'th',p:'sh',len:22,a:0},
+    {id:'to',p:'th',len:28,a:0},
+    {id:'nk',p:'to',len:7,a:0,rel:1,x:hd},
+    {id:'ar',p:'to',len:28,a:180,x:wt(4.5)}],
+  poses:[{t:0,a:{ft:-90,sh:0,th:0,to:0,ar:180}},{t:50,a:{ft:-62,sh:0,th:0,to:0,ar:180}},{t:100,a:{ft:-90,sh:0,th:0,to:0,ar:180}}]};
+
+FIG.carry={dur:1.6,pre:F(92),
+  nodes:[
+    {id:'lt',at:[66,48],len:22,a:180},
+    {id:'ls',p:'lt',len:22,a:180},
+    {id:'rt',at:[66,48],len:22,a:180},
+    {id:'rs',p:'rt',len:22,a:180},
+    {id:'to',at:[66,48],len:28,a:0},
+    {id:'nk',p:'to',len:7,a:0,rel:1,x:hd},
+    {id:'ar',p:'to',len:27,a:180,x:wt(5.5)}],
+  poses:[{t:0,a:{lt:157,ls:180,rt:203,rs:215,to:4,ar:180}},{t:50,a:{lt:203,ls:215,rt:157,rs:180,to:4,ar:180}},{t:100,a:{lt:157,ls:180,rt:203,rs:215,to:4,ar:180}}]};
+
 FIG.curl={dur:3,
   pre:F(90)+stand(50)+ci(50,6,5,'hd'),
   nodes:[
@@ -467,6 +488,7 @@ A:[
  {id:'a5',fa:'نشر جانب',en:'Dumbbell lateral raise',sets:3,reps:'۱۲–۲۰',rest:45,note:'سبک و دقیق.',anim:['lateral']},
  {id:'a6',fa:'پشت بازو طناب',en:'Cable rope pushdown',sets:2,reps:'۱۰–۱۵',rest:45,note:'',anim:['pushdown']},
  {id:'a7',fa:'فیله کمر دستگاه ۴۵ درجه',en:'45° back extension',sets:3,reps:'۱۲–۱۵',rest:60,note:'فقط با وزن بدن، آهسته و بدون تاب خوردن. وقتی بدنت در یک خط صاف شد بایست و بیشتر از آن به عقب قوس نده. هفته ۳ و ۴: اگر راحت بود یک صفحه‌ی ۵ کیلویی بغل بگیر.',anim:['backext']},
+ {id:'a9',fa:'ساق پا ایستاده',en:'Standing calf raise (machine or Smith)',sets:3,reps:'۱۰–۱۵',rest:60,note:'روی لبه‌ی پله، پاشنه کامل پایین (کشش) و کامل بالا، ۱ ثانیه مکث بالا. تند و نصفه نزن.',anim:['calf']},
  {id:'a8',fa:'دد باگ',en:'Dead bug',sets:3,reps:'۸ در هر طرف',rest:45,note:'کمر پایین صاف روی زمین بمونه.',anim:['deadbug']}
 ],
 B:[
@@ -477,6 +499,7 @@ B:[
  {id:'b5',fa:'قایقی',en:'Seated cable row',sets:3,reps:'۱۰–۱۲',rest:60,note:'',anim:['rowSeated']},
  {id:'b6',fa:'فیس‌پول',en:'Face pull',sets:3,reps:'۱۵',rest:45,note:'برای پوسچر و سلامت شانه عالیه.',anim:['facepull']},
  {id:'b7',fa:'جلو بازو چکشی',en:'Dumbbell hammer curl',sets:2,reps:'۱۰–۱۵',rest:45,note:'',anim:['curl']},
+ {id:'b9',fa:'راه رفتن کشاورز (فارمر واک)',en:"Farmer's carry",sets:3,reps:'۳۰–۴۰ متر',rest:90,note:'دو دمبل سنگین، صاف بایست، شانه‌ها عقب و پایین، قدم‌های کوتاه. برای ساعد، قدرت گرفتن، کمر و پوسچر عالیه.',anim:['carry']},
  {id:'b8',fa:'کرانچ سیم‌کش',en:'Cable crunch',sets:3,reps:'۱۲–۱۵',rest:45,note:'',anim:['cablecrunch']}
 ],
 C:[
@@ -488,14 +511,28 @@ C:[
  {id:'c6',fa:'جلو پا دستگاه',en:'Leg extension',sets:2,reps:'۱۲–۱۵',rest:60,note:'',anim:['legext']},
  {id:'c7',fa:'فلای بک',en:'Rear delt fly machine',sets:2,reps:'۱۵',rest:45,note:'',anim:['rearfly']},
  {id:'c8',fa:'سوپرست: جلو بازو سیم‌کش + پشت بازو طناب سر بالا',en:'Superset: cable curl + overhead rope extension',sets:2,reps:'۱۲–۱۵ برای هر کدام',rest:60,note:'دو حرکت را پشت سر هم بزن، بعد استراحت کن.',anim:['curl','overhead']}
+,
+ {id:'c10',fa:'ساق پا نشسته',en:'Seated calf raise',sets:3,reps:'۱۵–۲۰',rest:45,note:'کامل پایین و کامل بالا، کنترل‌شده.',anim:['calf']},
+ {id:'c11',fa:'سوپرست ساعد: مچ هالتر + مچ برعکس',en:'Superset: barbell wrist curl + reverse wrist curl',sets:2,reps:'۱۵–۲۰ برای هر کدام',rest:45,note:'ساعد روی نیمکت یا ران، فقط مچ حرکت کنه. سبک شروع کن.',anim:['curl']}
 ]};
 const START={
   a1:'میله + ۱۰ کیلو در هر طرف',a2:'۱۰–۱۲٫۵ کیلو هر دمبل',a5:'۴–۶ کیلو (سبک درسته)',a7:'فقط وزن بدن',
   b1:'میله + ۷٫۵–۱۰ کیلو در هر طرف',b3:'۸–۱۰ کیلو هر دمبل',b4:'دمبل ۱۴–۱۸ کیلو',b7:'۸–۱۰ کیلو هر دمبل',
-  c1:'وزنه‌ای که ۱۵ تکرار با RIR ۳ بزنی',c5:'۱۴–۱۸ کیلو'
+  c1:'وزنه‌ای که ۱۵ تکرار با RIR ۳ بزنی',c5:'۱۴–۱۸ کیلو',
+  a9:'وزنه‌ای که ۱۵ تکرار با RIR ۳ بزنی',b9:'دمبل ۱۶–۲۰ کیلو هر دست',c10:'وزنه‌ای که ۲۰ تکرار با RIR ۳ بزنی',c11:'میله‌ی خالی یا ۱۰ کیلو'
 };
 const START_DEF='وزنه‌ای که تکرار هدف را با RIR ۳ بده';
 const NO_WEIGHT={a8:1,c9:1};
+const LOWER={a1:1,a4:1,a9:1,b1:1,b4:1,c1:1,c4:1,c6:1,c10:1};
+const STEP={a5:1,b9:2,c11:2.5};
+function nextHint(ex,lt){
+  const top=Math.max(...(norm(ex.reps).match(/\d+/g)||[0]).map(Number));
+  const kg=parseFloat(lt.kg),r=parseInt(lt.r,10);
+  if(!top||isNaN(r))return '';
+  if(!(kg>0))return r>=top?`این جلسه: سقف تکرار را زدی، وزنه‌ی سبک اضافه کن`:`این جلسه: همون وزن، هدف ${fa(top)} تکرار`;
+  if(r>=top){const inc=STEP[ex.id]||(LOWER[ex.id]?5:2.5);return `↑ این جلسه: ${fa(+(kg+inc).toFixed(1))} کیلو (سقف تکرار را زدی)`;}
+  return `این جلسه: همون ${fa(kg)} کیلو، تلاش برای ${fa(Math.min(top,r+2))} تکرار`;
+}
 const CORE={
   m:{id:'c9',fa:'کور (محمد): برد داگ + ساید پلانک',en:'Core: bird dog + side plank',sets:3,reps:'برد داگ ۸ در هر طرف (۳ ثانیه نگه‌دار) + ساید پلانک ۲ × ۲۰–۳۰ ثانیه در هر طرف',repsShort:'۳ ست',rest:45,note:'',anim:['birddog','sideplank']},
   h:{id:'c9',fa:'کور (مهدی): کرانچ معکوس روی نیمکت',en:'Core: reverse crunch on a bench',sets:3,reps:'۱۲–۱۵',rest:45,note:'',anim:['revcrunch']}
@@ -584,7 +621,7 @@ function exCard(ex,idx,day){
       <div class="big">${setsTxt}</div>
       <div class="sm">استراحت: ${restLabel(ex.rest)}</div>
       ${extra?'<div><span class="chip">+۱ ست (هفته ۳)</span></div>':''}
-      ${lt?`<div class="last">آخرین بار (هفته ${fa(lt.w)}): ${fa(lt.kg)} کیلو${lt.r?' × '+fa(lt.r):''}</div>`
+      ${lt?`<div class="last">آخرین بار (هفته ${fa(lt.w)}): ${fa(lt.kg)} کیلو${lt.r?' × '+fa(lt.r):''}</div>${nextHint(ex,lt)?`<div class="start"><b>${nextHint(ex,lt)}</b></div>`:''}`
         :NO_WEIGHT[ex.id]?'':`<div class="start">وزنه‌ی شروع: <b>${START[ex.id]||START_DEF}</b></div>`}
     </div>
   </div>
@@ -681,7 +718,7 @@ function infoHTML(){
   <details class="card"><summary>قانون پیشرفت</summary><div class="in">
     <p><b>پیشرفت دوگانه:</b> وقتی در <b>همه‌ی ست‌ها</b> به <b>سقف</b> بازه‌ی تکرار با RIR هدف رسیدی، جلسه‌ی بعد وزنه را زیاد کن: <b>۲٫۵ کیلو برای بالاتنه</b> و <b>۵ کیلو برای پایین‌تنه و دستگاه‌ها</b>. بعد دوباره از پایین بازه بالا بیا.</p>
     <ul><li>هفته ۱: RIR ۳، یادگیری حرکت‌ها و پیدا کردن وزنه‌ها</li><li>هفته ۲: RIR ۲، تکرار یا وزنه اضافه کن</li><li>هفته ۳: RIR ۱–۲، یک ست اضافه به حرکت ۱ و ۲ هر روز</li><li>هفته ۴: RIR ۲، ست‌های عادی و تلاش برای شکستن عددهای هفته ۲، بعد اندازه‌گیری و عکس</li></ul>
-    <p>هر ست را ثبت کن: حرکت، وزنه، تکرار (همین‌جا یا توی نوت گوشی).</p>
+    <p>هر ست را ثبت کن. در خانه‌ی «تکرار» تعداد تکرار <b>ست آخر</b> را بنویس (سخت‌ترین ست). پیشنهاد جلسه‌ی بعد از روی همین عدد ساخته می‌شه.</p>
     <p>حدود ۸ ماه تمرین (با وقفه) داشتی، پس در سطح <b>مبتدی پیشرفته</b> هستی و قدرت بعد از وقفه زود برمی‌گرده. انتظار داشته باش تقریبا هر هفته وزنه اضافه کنی.</p>
   </div></details>
   <details class="card"><summary>وزنه‌های شروع هفته ۱</summary><div class="in">
