@@ -74,6 +74,16 @@ header p{margin:2px 0 0;color:var(--muted);font-size:14px}
 .chip{display:inline-block;background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:0 8px;font-size:12.5px;font-weight:600}
 .note{margin:10px 0 0;font-size:14.5px;color:var(--ink)}
 .last{font-size:13px;color:var(--accent);font-weight:600}
+.start{font-size:13px;color:var(--muted);font-weight:600}
+.start b{color:var(--ink)}
+.sv{min-height:20px;margin-top:6px;font-size:13px;font-weight:600;color:var(--muted)}
+.sv.ok{color:var(--accent)}
+.sv.flash{animation:svf .6s ease}
+@keyframes svf{0%{opacity:.2;transform:translateY(2px)}100%{opacity:1;transform:none}}
+.ex.logged .logs label{border-color:var(--accent)}
+.pill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:600;color:var(--muted)}
+.pill.ok{color:var(--accent);border-color:var(--accent)}
+.pill.err{color:var(--warn);border-color:var(--warn)}
 .bubs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .bub{width:48px;height:48px;border-radius:50%;border:2px solid var(--accent);background:transparent;color:var(--accent);font-weight:800;font-size:17px}
 .bub.on{background:var(--accent);color:var(--accent-ink)}
@@ -143,6 +153,7 @@ details .in{padding:0 14px 14px;font-size:15px}
   <header>
     <h1>برنامه تمرینی محمد و مهدی</h1>
     <p>ماه اول · چربی‌سوزی و عضله‌سازی · شروع: ۱۹ مهر ۱۴۰۵ (<bdi dir="ltr">۲۰۲۶-۱۰-۱۱</bdi>)</p>
+    <button type="button" class="pill" id="syncPill" data-act="day" data-v="I"></button>
   </header>
   <section class="card ctl" aria-label="تنظیمات">
     <div>
@@ -478,6 +489,13 @@ C:[
  {id:'c7',fa:'فلای بک',en:'Rear delt fly machine',sets:2,reps:'۱۵',rest:45,note:'',anim:['rearfly']},
  {id:'c8',fa:'سوپرست: جلو بازو سیم‌کش + پشت بازو طناب سر بالا',en:'Superset: cable curl + overhead rope extension',sets:2,reps:'۱۲–۱۵ برای هر کدام',rest:60,note:'دو حرکت را پشت سر هم بزن، بعد استراحت کن.',anim:['curl','overhead']}
 ]};
+const START={
+  a1:'میله + ۱۰ کیلو در هر طرف',a2:'۱۰–۱۲٫۵ کیلو هر دمبل',a5:'۴–۶ کیلو (سبک درسته)',a7:'فقط وزن بدن',
+  b1:'میله + ۷٫۵–۱۰ کیلو در هر طرف',b3:'۸–۱۰ کیلو هر دمبل',b4:'دمبل ۱۴–۱۸ کیلو',b7:'۸–۱۰ کیلو هر دمبل',
+  c1:'وزنه‌ای که ۱۵ تکرار با RIR ۳ بزنی',c5:'۱۴–۱۸ کیلو'
+};
+const START_DEF='وزنه‌ای که تکرار هدف را با RIR ۳ بده';
+const NO_WEIGHT={a8:1,c9:1};
 const CORE={
   m:{id:'c9',fa:'کور (محمد): برد داگ + ساید پلانک',en:'Core: bird dog + side plank',sets:3,reps:'برد داگ ۸ در هر طرف (۳ ثانیه نگه‌دار) + ساید پلانک ۲ × ۲۰–۳۰ ثانیه در هر طرف',repsShort:'۳ ست',rest:45,note:'',anim:['birddog','sideplank']},
   h:{id:'c9',fa:'کور (مهدی): کرانچ معکوس روی نیمکت',en:'Core: reverse crunch on a bench',sets:3,reps:'۱۲–۱۵',rest:45,note:'',anim:['revcrunch']}
@@ -533,6 +551,7 @@ const saveUI=()=>{try{store.set('gym1|ui',JSON.stringify({person:S.person,week:S
 
 /* ================= rendering ================= */
 function renderControls(){
+  renderPill();
   $('#segPerson').innerHTML=['m','h'].map(p=>`<button type="button" data-act="person" data-v="${p}" aria-pressed="${S.person===p}">${PNAME[p]}</button>`).join('');
   $('#segWeek').innerHTML=[1,2,3,4].map(w=>`<button type="button" data-act="week" data-v="${w}" aria-pressed="${S.week===w}">${fa(w)}</button>`).join('');
   const W=WEEKS[S.week];
@@ -557,7 +576,7 @@ function exCard(ex,idx,day){
   const lt=lastTime(S.person,S.week,day,ex.id);
   const bubs=Array.from({length:n},(_,i)=>`<button type="button" class="bub${log.s[i]?' on':''}" data-act="set" data-ex="${ex.id}" data-i="${i}" aria-pressed="${!!log.s[i]}" aria-label="ست ${fa(i+1)}">${fa(i+1)}</button>`).join('');
   const setsTxt=ex.repsShort?`${fa(n)} ست`:`${fa(n)} ست × ${ex.reps}`;
-  return `<article class="card ex" data-card="${ex.id}">
+  return `<article class="card ex${(log.kg||log.r)?' logged':''}" data-card="${ex.id}">
   <div class="top"><div class="num">${fa(idx+1)}</div><div class="names"><h3>${esc(ex.fa)}</h3><div class="en">${esc(ex.en)}</div></div></div>
   <div class="mid">
     <div class="figs">${ex.anim.map(figHTML).join('')}</div>
@@ -565,7 +584,8 @@ function exCard(ex,idx,day){
       <div class="big">${setsTxt}</div>
       <div class="sm">استراحت: ${restLabel(ex.rest)}</div>
       ${extra?'<div><span class="chip">+۱ ست (هفته ۳)</span></div>':''}
-      <div class="last">${lt?`آخرین بار (هفته ${fa(lt.w)}): ${fa(lt.kg)} کیلو${lt.r?' × '+fa(lt.r):''}`:'آخرین بار: ثبت نشده'}</div>
+      ${lt?`<div class="last">آخرین بار (هفته ${fa(lt.w)}): ${fa(lt.kg)} کیلو${lt.r?' × '+fa(lt.r):''}</div>`
+        :NO_WEIGHT[ex.id]?'':`<div class="start">وزنه‌ی شروع: <b>${START[ex.id]||START_DEF}</b></div>`}
     </div>
   </div>
   ${ex.repsShort?`<p class="note"><b>برنامه:</b> ${ex.reps}</p>`:''}
@@ -575,6 +595,7 @@ function exCard(ex,idx,day){
     <label>وزنه<input class="kg" inputmode="decimal" autocomplete="off" data-ex="${ex.id}" value="${esc(log.kg)}" placeholder="۰" aria-label="وزنه به کیلو"><span>کیلو</span></label>
     <label>تکرار<input class="rp" inputmode="numeric" autocomplete="off" data-ex="${ex.id}" value="${esc(log.r)}" placeholder="۰" aria-label="تعداد تکرار"></label>
   </div>
+  <div class="sv${(log.kg||log.r)?' ok':''}" data-sv="${ex.id}" aria-live="polite">${(log.kg||log.r)?svText(true):''}</div>
 </article>`;
 }
 
@@ -587,6 +608,7 @@ function resetHTML(){
 }
 
 function renderDay(){
+  renderPill();
   const d=S.day;
   if(d==='I'){$('#app').innerHTML=infoHTML();return;}
   const list=exList(d,S.person);
@@ -806,7 +828,22 @@ async function gh(method,path,body){
   return r.json();
 }
 let syncT=null,syncBusy=false,syncState='';
-function setSyncState(t){syncState=t;const el=$('#syncMsg');if(el)el.textContent=t;}
+function setSyncState(t){syncState=t;const el=$('#syncMsg');if(el)el.textContent=t;renderPill();}
+let syncOK=false,syncErr=false;
+function syncOn(){const c=getSync();return !!(c.token&&c.gist&&c.owner&&c.owner===S.person);}
+function svText(fromRender){
+  if(!syncOn())return '✓ ذخیره شد روی گوشی';
+  return (!fromRender&&syncT)||syncBusy?'✓ روی گوشی ذخیره شد · در حال ارسال به GitHub…':'✓ ذخیره شد روی گوشی و GitHub';
+}
+function refreshSV(){document.querySelectorAll('.sv.ok').forEach(el=>{if(el.textContent)el.textContent=svText(true);});}
+function renderPill(){
+  const el=$('#syncPill');if(!el)return;const c=getSync();
+  if(!(c.token&&c.gist&&c.owner)){el.className='pill';el.textContent='ذخیره: فقط روی این گوشی · وصل کردن GitHub ←';return;}
+  if(c.owner!==S.person){el.className='pill';el.textContent=`GitHub برای ${PNAME[c.owner]} وصله؛ ${PNAME[S.person]} فقط روی گوشی`;return;}
+  if(syncErr){el.className='pill err';el.textContent='⚠ ارسال به GitHub نشد، دوباره امتحان می‌شه';return;}
+  if(syncT||syncBusy){el.className='pill';el.textContent='در حال ارسال به GitHub…';return;}
+  el.className='pill ok';el.textContent='✓ همه‌چیز در GitHub ذخیره شده'+(c.last?' · '+fa(new Date(c.last).toTimeString().slice(0,5)):'');
+}
 function onDataChange(k){
   const c=getSync();if(!c.token||!c.gist||!c.owner||!ownKey(k,c.owner))return;
   clearTimeout(syncT);syncT=setTimeout(pushSync,4000);setSyncState('تغییر ذخیره نشده…');
@@ -818,9 +855,9 @@ async function pushSync(){
   try{
     await gh('PATCH','/gists/'+c.gist,{files:{[gistFile(c.owner)]:{content:syncPayload(c.owner)}}});
     c.last=new Date().toISOString();putSync(c);
-    setSyncState('ذخیره شد در GitHub · '+fa(new Date().toTimeString().slice(0,5)));
-  }catch(e){setSyncState('ذخیره نشد: '+(e.message||'اینترنت قطعه؟')+'. دوباره خودکار امتحان می‌شه.');}
-  syncBusy=false;
+    syncErr=false;syncBusy=false;
+    setSyncState('ذخیره شد در GitHub · '+fa(new Date().toTimeString().slice(0,5)));refreshSV();
+  }catch(e){syncErr=true;syncBusy=false;setSyncState('ذخیره نشد: '+(e.message||'اینترنت قطعه؟')+'. دوباره خودکار امتحان می‌شه.');clearTimeout(syncT);syncT=setTimeout(pushSync,30000);}
 }
 /* pull: fills in anything this phone is missing (new phone / cleared browser); local data wins */
 async function pullSync(){
@@ -952,6 +989,9 @@ document.addEventListener('input',e=>{
   if(t.classList.contains('kg'))log.kg=nv;else log.r=nv;
   log.d=today();
   putLog(S.person,S.week,S.day,t.dataset.ex,log);
+  const card=t.closest('.ex');if(card)card.classList.toggle('logged',!!(log.kg||log.r));
+  const sv=document.querySelector(`[data-sv="${t.dataset.ex}"]`);
+  if(sv){sv.textContent=(log.kg||log.r)?svText(false):'';sv.className='sv ok';void sv.offsetWidth;sv.classList.add('flash');}
 });
 document.addEventListener('change',e=>{
   const t=e.target;if(t&&t.id==='imp'&&t.files&&t.files[0]){importFile(t.files[0]);t.value='';}
