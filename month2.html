@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>برنامه ماه دوم محمد</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f6f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1214" media="(prefers-color-scheme: dark)">
+<meta name="description" content="برنامه ماه دوم محمد: نسخه‌ی اصلاح‌شده‌ی برنامه‌ی مهدی">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ماه ۲">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f7;--card:#fff;--ink:#12171b;--muted:#566069;--line:#dde2e6;--accent:#0b7a6f;--accent-ink:#fff;--accent-soft:#e0f3f0}
+@media (prefers-color-scheme: dark){:root{--bg:#0e1214;--card:#171c20;--ink:#eef2f4;--muted:#9ba7b0;--line:#2a3238;--accent:#3fd6c4;--accent-ink:#04201c;--accent-soft:#123029}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Vazirmatn',system-ui,-apple-system,Tahoma,sans-serif;font-size:16px;line-height:1.5;padding-bottom:env(safe-area-inset-bottom)}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(8px + env(safe-area-inset-top)) 0 8px;border-bottom:1px solid var(--line)}
+h1{margin:0 0 6px;font-size:15px;font-weight:600;color:var(--muted)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg button{min-height:44px;border:0;border-radius:9px;background:transparent;font:inherit;font-weight:800;font-size:16px;color:inherit;cursor:pointer}
+.seg button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg small{display:block;font-weight:400;font-size:11px;line-height:1.2;opacity:.85}
+.warm{margin:10px 0 6px;font-size:13.5px;color:var(--muted)}
+ol{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+li{display:flex;gap:10px;align-items:baseline;padding:9px 12px;border-top:1px solid var(--line)}
+li:first-child{border-top:0}
+.n{flex:none;width:18px;color:var(--muted);font-size:13px}
+.ex{flex:1;min-width:0}
+.ex b{font-weight:600}
+.ex span{display:block;font-size:12.5px;color:var(--muted)}
+.ex .m{color:var(--accent)}
+.sr{flex:none;font-weight:800;font-size:15px;direction:ltr;white-space:nowrap}
+li.swap .ex b::after{content:" ★";color:var(--accent)}
+details{margin:12px 0 20px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:14px}
+summary{font-weight:600;cursor:pointer;min-height:28px}
+details ul{margin:6px 0 0;padding-inline-start:18px}
+details li{display:list-item;border:0;padding:2px 0}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <h1>ماه دوم · محمد <span style="font-weight:400">(★ = جای حرکت مهدی)</span></h1>
+  <div class="seg" role="tablist">
+    <button role="tab" data-d="A">A<small>سینه، شانه، پشت</small></button>
+    <button role="tab" data-d="B">B<small>پا، بازو</small></button>
+    <button role="tab" data-d="C">C<small>اسکوات، کمر، شکم</small></button>
+  </div>
+</div></div>
+
+<main class="wrap">
+  <p class="warm" id="warm"></p>
+  <ol id="list"></ol>
+  <details>
+    <summary>قوانین</summary>
+    <ul>
+      <li>استراحت ۶۰–۹۰ ثانیه؛ پرس پا، اسکوات و رومانیایی ۲ دقیقه</li>
+      <li>هر ست را با ۱–۲ تکرار ذخیره تمام کن</li>
+      <li>وقتی همه‌ی ست‌ها به سقف تکرار رسید، جلسه‌ی بعد کمترین وزنه را اضافه کن</li>
+      <li>هفته‌ی ۴ سبک: همان وزنه، یک ست کمتر</li>
+      <li>گرم کردن: ۱۵ دقیقه هوازی + فوم‌رول پشت، وال اسلاید ۲×۱۰، کش باند ۲×۱۵، چانه به داخل ۱×۱۰</li>
+      <li>روزانه ~۲۴۰۰ کالری، ۱۶۰–۱۷۰ گرم پروتئین، ۸ تا ۱۰ هزار قدم</li>
+    </ul>
+  </details>
+</main>
+
+<script>
+// [name, sets×reps, note, mahdi's exercise if swapped]
+const D = {
+  A: { warm: "۱۵ دقیقه هوازی + گرم کردن پوسچر · آخر: ۱۰ دقیقه راه رفتن", x: [
+    ["پرس سینه دستگاه", "3×8–12"],
+    ["پرس بالا سینه دمبل", "3×8–12"],
+    ["فلای معکوس (فلای بک)", "4×12–15", "همان دستگاه باترفلای، رو به پد", "باترفلای"],
+    ["فیس‌پول", "3×15", "همان سیم‌کش", "کراس اور"],
+    ["سرشانه دستگاه", "3×8–12"],
+    ["تی‌بار", "3×8–12", "", "سرشانه دمبل"],
+    ["نشر جانب دمبل", "3×12–15"],
+    ["لت از جلو", "4×8–12"],
+    ["قایقی دستگاه", "3×10–12"],
+    ["زیربغل دمبل تک خم", "3×10–12", "هر طرف · اگر وقت کم بود حذف کن"],
+    ["کرانچ دستگاه", "3×12–15"],
+  ]},
+  B: { warm: "۱۵ دقیقه هوازی + گرم کردن پوسچر · آخر: ۱۰ دقیقه راه رفتن", x: [
+    ["پرس پا", "4×10–12", "وقتی مهدی هنوز هوازی است", "—"],
+    ["جلو پا دستگاه", "3×12–15"],
+    ["پشت پا دستگاه", "4×10–12"],
+    ["داخل و خارج پا دستگاه", "3×15"],
+    ["فیله کمر ۴۵ درجه", "3×12–15", "آرام، از خط صاف عقب‌تر نرو", "وال سیت"],
+    ["ساق دستگاه", "3×12–15"],
+    ["جلو بازو هالتر", "3×8–10"],
+    ["فارمر واک", "3×30–40m", "دمبل سنگین، صاف بایست", "جلو بازو دمبل متوالی"],
+    ["جلو بازو سیم‌کش", "3×10–12"],
+    ["پشت بازو دمبل تک", "3×10–12"],
+    ["فیس‌پول", "3×15", "", "پشت بازو دستگاه"],
+    ["پشت بازو سیم‌کش", "3×10–12"],
+    ["زیرشکم خوابیده", "3×12–15", "زانو خم، کمر چسبیده به زمین"],
+  ]},
+  C: { warm: "۲۰ دقیقه هوازی + گرم کردن پوسچر · آخر: ۱۰ دقیقه راه رفتن", x: [
+    ["ددلیفت رومانیایی", "3×8–10", "کمر صاف · وقتی مهدی هنوز هوازی است", "—"],
+    ["پل باسن (هیپ تراست)", "3×10–12", "وقتی مهدی هنوز هوازی است", "—"],
+    ["اسکوات اسمیت یا گابلت", "4×8–12", "با وزنه", "اسکوات بدون وزنه"],
+    ["استپ آپ با دمبل", "3×10", "هر پا"],
+    ["برد داگ", "3×8", "هر طرف، ۳ ثانیه مکث", "زانو بلند"],
+    ["پلانک پهلو", "3×20–30s", "هر طرف", "زانو به آرنج"],
+    ["کرانچ", "3×15"],
+    ["زیرشکم دوچرخه", "3×15"],
+    ["پلانک", "3×30–45s"],
+    ["ساعد دمبل + ساعد برعکس", "3×15", "سوپرست"],
+  ]},
+};
+
+const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+const fa = s => s.replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+
+function show(day) {
+  if (!D[day]) day = "A";
+  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-selected", b.dataset.d === day));
+  document.getElementById("warm").textContent = D[day].warm;
+  document.getElementById("list").innerHTML = D[day].x.map(([name, sr, note = "", mahdi], i) => `
+    <li class="${mahdi ? "swap" : ""}">
+      <span class="n">${fa(String(i + 1))}</span>
+      <div class="ex"><b>${esc(name)}</b>${note ? `<span>${esc(note)}</span>` : ""}${mahdi ? `<span class="m">مهدی: ${esc(mahdi === "—" ? "هوازی" : mahdi)}</span>` : ""}</div>
+      <span class="sr">${fa(sr)}</span>
+    </li>`).join("");
+  history.replaceState(null, "", "#" + day);
+}
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => show(b.dataset.d));
+show(location.hash.slice(1));
+</script>
+</body>
+</html>
