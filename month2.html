@@ -19,24 +19,34 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Vazirmatn',system-ui,-apple-system,Tahoma,sans-serif;font-size:16px;line-height:1.5;padding-bottom:env(safe-area-inset-bottom)}
+button,input{font:inherit;color:inherit}
 .wrap{max-width:640px;margin:0 auto;padding:0 16px}
 .top{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(8px + env(safe-area-inset-top)) 0 8px;border-bottom:1px solid var(--line)}
-h1{margin:0 0 6px;font-size:15px;font-weight:600;color:var(--muted)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+h1{margin:0;font-size:15px;font-weight:600;color:var(--muted)}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
-.seg button{min-height:44px;padding:4px 8px;border:0;border-radius:9px;background:transparent;font:inherit;font-weight:800;font-size:16px;color:inherit;cursor:pointer}
-.seg button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg button{min-height:44px;padding:4px 8px;border:0;border-radius:9px;background:transparent;font-weight:800;font-size:16px;cursor:pointer}
+.seg button[aria-selected="true"],.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .seg small{display:block;font-weight:400;font-size:11px;line-height:1.2;opacity:.85}
+.wk{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.wk .seg{grid-template-columns:repeat(4,40px);padding:3px;border-radius:10px}
+.wk .seg button{min-height:36px;padding:0;font-size:15px;border-radius:7px}
 .warm{margin:10px 0 6px;font-size:13.5px;color:var(--muted)}
 ol{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-li{display:flex;gap:10px;align-items:baseline;padding:9px 12px;border-top:1px solid var(--line)}
+li{display:grid;grid-template-columns:18px 1fr auto;column-gap:10px;align-items:baseline;padding:9px 12px;border-top:1px solid var(--line)}
 li:first-child{border-top:0}
-.n{flex:none;width:18px;color:var(--muted);font-size:13px}
-.ex{flex:1;min-width:0}
+.n{color:var(--muted);font-size:13px}
+.ex{min-width:0}
 .ex b{font-weight:600}
 .ex span{display:block;font-size:12.5px;color:var(--muted)}
 .ex .m{color:var(--accent)}
-.sr{flex:none;font-weight:800;font-size:15px;direction:ltr;white-space:nowrap}
+.sr{font-weight:800;font-size:15px;direction:ltr;white-space:nowrap}
 li.swap .ex b::after{content:" ★";color:var(--accent)}
+.log{grid-column:2/-1;display:flex;align-items:center;gap:6px;margin-top:6px}
+.log input{width:64px;min-height:40px;padding:4px 8px;border:1px solid var(--line);border-radius:9px;background:var(--bg);text-align:center;font-size:16px}
+.log input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.hint{flex:1;min-width:0;font-size:12.5px;line-height:1.35;color:var(--muted)}
+.hint b{color:var(--accent);font-weight:600}
 details{margin:12px 0 20px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:14px}
 summary{font-weight:600;cursor:pointer;min-height:28px}
 details ul{margin:6px 0 0;padding-inline-start:18px}
@@ -45,7 +55,10 @@ details li{display:list-item;border:0;padding:2px 0}
 </head>
 <body>
 <div class="top"><div class="wrap">
-  <h1>ماه دوم · محمد <span style="font-weight:400">(★ = جای حرکت مهدی)</span></h1>
+  <div class="bar">
+    <h1>ماه دوم · محمد</h1>
+    <div class="wk">هفته <div class="seg" id="weeks"></div></div>
+  </div>
   <div class="seg" role="tablist">
     <button role="tab" data-d="A">A<small>سینه، شانه، پشت</small></button>
     <button role="tab" data-d="B">B<small>پا، بازو</small></button>
@@ -59,6 +72,8 @@ details li{display:list-item;border:0;padding:2px 0}
   <details>
     <summary>قوانین</summary>
     <ul>
+      <li>★ = جای حرکت مهدی؛ زیرش نوشته مهدی چه می‌زند</li>
+      <li>وزنه و تکرارِ آخرین ست را بنویس؛ خودکار روی همین گوشی ذخیره می‌شود</li>
       <li>استراحت ۶۰–۹۰ ثانیه؛ پرس پا، اسکوات و رومانیایی ۲ دقیقه</li>
       <li>هر ست را با ۱–۲ تکرار ذخیره تمام کن</li>
       <li>وقتی همه‌ی ست‌ها به سقف تکرار رسید، جلسه‌ی بعد کمترین وزنه را اضافه کن</li>
@@ -70,66 +85,118 @@ details li{display:list-item;border:0;padding:2px 0}
 </main>
 
 <script>
-// [name, sets×reps, note, mahdi's exercise if swapped]
+// id: log key · sr: sets×reps · note · mh: Mahdi's exercise when swapped ("—" = he's on cardio)
+// m1: month-1 tracker id (start weight) · L: lower body (+5 kg steps) · nw: no weight to log
 const D = {
   A: { warm: "۱۵ دقیقه هوازی + گرم کردن پوسچر · آخر: ۱۰ دقیقه راه رفتن", x: [
-    ["پرس سینه دستگاه", "3×8–12"],
-    ["پرس بالا سینه دمبل", "3×8–12"],
-    ["فلای معکوس (فلای بک)", "4×12–15", "همان دستگاه باترفلای، رو به پد", "باترفلای"],
-    ["فیس‌پول", "3×15", "همان سیم‌کش", "کراس اور"],
-    ["سرشانه دستگاه", "3×8–12"],
-    ["تی‌بار", "3×8–12", "", "سرشانه دمبل"],
-    ["نشر جانب دمبل", "3×12–15"],
-    ["لت از جلو", "4×8–12"],
-    ["قایقی دستگاه", "3×10–12"],
-    ["زیربغل دمبل تک خم", "3×10–12", "هر طرف · اگر وقت کم بود حذف کن"],
-    ["کرانچ دستگاه", "3×12–15"],
+    { id: "a1", n: "پرس سینه دستگاه", sr: "3×8–12", m1: "C|c2" },
+    { id: "a2", n: "پرس بالا سینه دمبل", sr: "3×8–12", m1: "B|b3" },
+    { id: "a3", n: "فلای معکوس (فلای بک)", sr: "4×12–15", note: "همان دستگاه باترفلای، رو به پد", mh: "باترفلای", m1: "C|c7" },
+    { id: "a4", n: "فیس‌پول", sr: "3×15", note: "همان سیم‌کش", mh: "کراس اور", m1: "B|b6" },
+    { id: "a5", n: "سرشانه دستگاه", sr: "3×8–12" },
+    { id: "a6", n: "تی‌بار", sr: "3×8–12", mh: "سرشانه دمبل", m1: "A|a3" },
+    { id: "a7", n: "نشر جانب دمبل", sr: "3×12–15", m1: "A|a5" },
+    { id: "a8", n: "لت از جلو", sr: "4×8–12", m1: "B|b2" },
+    { id: "a9", n: "قایقی دستگاه", sr: "3×10–12", m1: "B|b5" },
+    { id: "a10", n: "زیربغل دمبل تک خم", sr: "3×10–12", note: "هر طرف · اگر وقت کم بود حذف کن", m1: "C|c5" },
+    { id: "a11", n: "کرانچ دستگاه", sr: "3×12–15" },
   ]},
   B: { warm: "۱۵ دقیقه هوازی + گرم کردن پوسچر · آخر: ۱۰ دقیقه راه رفتن", x: [
-    ["پرس پا", "4×10–12", "وقتی مهدی هنوز هوازی است", "—"],
-    ["جلو پا دستگاه", "3×12–15"],
-    ["پشت پا دستگاه", "4×10–12"],
-    ["داخل و خارج پا دستگاه", "3×15"],
-    ["فیله کمر ۴۵ درجه", "3×12–15", "آرام، از خط صاف عقب‌تر نرو", "وال سیت"],
-    ["ساق دستگاه", "3×12–15"],
-    ["جلو بازو هالتر", "3×8–10"],
-    ["فارمر واک", "3×30–40m", "دمبل سنگین، صاف بایست", "جلو بازو دمبل متوالی"],
-    ["جلو بازو سیم‌کش", "3×10–12"],
-    ["پشت بازو دمبل تک", "3×10–12"],
-    ["فیس‌پول", "3×15", "", "پشت بازو دستگاه"],
-    ["پشت بازو سیم‌کش", "3×10–12"],
-    ["زیرشکم خوابیده", "3×12–15", "زانو خم، کمر چسبیده به زمین"],
+    { id: "b0", n: "پرس پا", sr: "4×10–12", note: "وقتی مهدی هنوز هوازی است", mh: "—", m1: "C|c1", L: 1 },
+    { id: "b1", n: "جلو پا دستگاه", sr: "3×12–15", m1: "C|c6", L: 1 },
+    { id: "b2", n: "پشت پا دستگاه", sr: "4×10–12", m1: "A|a4", L: 1 },
+    { id: "b3", n: "داخل و خارج پا دستگاه", sr: "3×15", L: 1 },
+    { id: "b4", n: "فیله کمر ۴۵ درجه", sr: "3×12–15", note: "آرام، از خط صاف عقب‌تر نرو", mh: "وال سیت", m1: "A|a7" },
+    { id: "b5", n: "ساق دستگاه", sr: "3×12–15", m1: "A|a9", L: 1 },
+    { id: "b6", n: "جلو بازو هالتر", sr: "3×8–10" },
+    { id: "b7", n: "فارمر واک", sr: "3×30–40m", note: "دمبل سنگین، صاف بایست · تکرار = متر", mh: "جلو بازو دمبل متوالی", m1: "B|b9" },
+    { id: "b8", n: "جلو بازو سیم‌کش", sr: "3×10–12" },
+    { id: "b9", n: "پشت بازو دمبل تک", sr: "3×10–12" },
+    { id: "b10", n: "فیس‌پول", sr: "3×15", mh: "پشت بازو دستگاه", m1: "B|b6" },
+    { id: "b11", n: "پشت بازو سیم‌کش", sr: "3×10–12", m1: "A|a6" },
+    { id: "b12", n: "زیرشکم خوابیده", sr: "3×12–15", note: "زانو خم، کمر چسبیده به زمین", nw: 1 },
   ]},
   C: { warm: "۲۰ دقیقه هوازی + گرم کردن پوسچر · آخر: ۱۰ دقیقه راه رفتن", x: [
-    ["ددلیفت رومانیایی", "3×8–10", "کمر صاف · وقتی مهدی هنوز هوازی است", "—"],
-    ["پل باسن (هیپ تراست)", "3×10–12", "وقتی مهدی هنوز هوازی است", "—"],
-    ["اسکوات اسمیت یا گابلت", "4×8–12", "با وزنه", "اسکوات بدون وزنه"],
-    ["استپ آپ با دمبل", "3×10", "هر پا"],
-    ["برد داگ", "3×8", "هر طرف، ۳ ثانیه مکث", "زانو بلند"],
-    ["پلانک پهلو", "3×20–30s", "هر طرف", "زانو به آرنج"],
-    ["کرانچ", "3×15"],
-    ["زیرشکم دوچرخه", "3×15"],
-    ["پلانک", "3×30–45s"],
-    ["ساعد دمبل + ساعد برعکس", "3×15", "سوپرست"],
+    { id: "c0", n: "ددلیفت رومانیایی", sr: "3×8–10", note: "کمر صاف · وقتی مهدی هنوز هوازی است", mh: "—", m1: "B|b1", L: 1 },
+    { id: "c1", n: "پل باسن (هیپ تراست)", sr: "3×10–12", note: "وقتی مهدی هنوز هوازی است", mh: "—", m1: "C|c4", L: 1 },
+    { id: "c2", n: "اسکوات اسمیت یا گابلت", sr: "4×8–12", note: "با وزنه", mh: "اسکوات بدون وزنه", m1: "A|a1", L: 1 },
+    { id: "c3", n: "استپ آپ با دمبل", sr: "3×10", note: "هر پا" },
+    { id: "c4", n: "برد داگ", sr: "3×8", note: "هر طرف، ۳ ثانیه مکث", mh: "زانو بلند", nw: 1 },
+    { id: "c5", n: "پلانک پهلو", sr: "3×20–30s", note: "هر طرف", mh: "زانو به آرنج", nw: 1 },
+    { id: "c6", n: "کرانچ", sr: "3×15", nw: 1 },
+    { id: "c7", n: "زیرشکم دوچرخه", sr: "3×15", nw: 1 },
+    { id: "c8", n: "پلانک", sr: "3×30–45s", nw: 1 },
+    { id: "c9", n: "ساعد دمبل + ساعد برعکس", sr: "3×15", note: "سوپرست", m1: "C|c11" },
   ]},
 };
 
-const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
-const fa = s => s.replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+const fa = s => String(s).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+const norm = s => String(s).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[٫,،]/g, ".");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
-function show(day) {
-  if (!D[day]) day = "A";
-  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-selected", b.dataset.d === day));
+// storage can throw (private mode); fall back to memory so the page still works
+const mem = {};
+const get = k => { try { const v = localStorage.getItem(k); if (v != null) return v; } catch (e) {} return mem[k] ?? null; };
+const set = (k, v) => { mem[k] = v; try { localStorage.setItem(k, v); } catch (e) {} };
+const read = k => { try { const o = JSON.parse(get(k) || "null"); return o && typeof o === "object" ? o : null; } catch (e) { return null; } };
+const key = (w, d, id) => `gym2|m|${w}|${d}|${id}`;
+
+let ui = read("gym2|ui") || {};
+let week = [1, 2, 3, 4].includes(ui.week) ? ui.week : 1;
+let day = "A";
+
+// latest earlier week this month, else month-1 tracker log (same site, key gym1|m|week|day|id)
+function last(d, ex) {
+  for (let w = week - 1; w >= 1; w--) { const l = read(key(w, d, ex.id)); if (l && l.kg) return { ...l, w }; }
+  if (ex.m1) { const [md, mid] = ex.m1.split("|");
+    for (let w = 4; w >= 1; w--) { const l = read(`gym1|m|${w}|${md}|${mid}`); if (l && l.kg) return { ...l, m1: true }; } }
+  return null;
+}
+
+function hint(ex, lt) {
+  if (ex.nw) return "";
+  if (!lt) return week === 1 ? "وزنه‌ای که تکرار هدف را با ۲ تکرار ذخیره بزنی" : "";
+  const kg = parseFloat(norm(lt.kg)), r = parseInt(norm(lt.r), 10);
+  const prev = `${fa(lt.kg)} کیلو${lt.r ? " × " + fa(lt.r) : ""}`;
+  if (lt.m1) return `ماه ۱: ${prev} · <b>از همین شروع کن</b>`;
+  if (week === 4) return `هفته ${fa(lt.w)}: ${prev} · <b>همان وزنه، یک ست کمتر</b>`;
+  const top = Math.max(...(ex.sr.split("×")[1].match(/\d+/g) || [0]).map(Number));
+  if (!(kg > 0) || isNaN(r)) return `هفته ${fa(lt.w)}: ${prev}`;
+  if (r >= top) return `هفته ${fa(lt.w)}: ${prev} · <b>↑ ${fa(+(kg + (ex.L ? 5 : 2.5)).toFixed(1))} کیلو</b>`;
+  return `هفته ${fa(lt.w)}: ${prev} · <b>همان وزنه، ${fa(Math.min(top, r + 2))} تکرار</b>`;
+}
+
+function show(d) {
+  if (D[d]) day = d;
+  document.getElementById("weeks").innerHTML = [1, 2, 3, 4].map(w => `<button data-w="${w}" aria-pressed="${w === week}">${fa(w)}</button>`).join("");
+  document.querySelectorAll("[data-d]").forEach(b => b.setAttribute("aria-selected", b.dataset.d === day));
   document.getElementById("warm").textContent = D[day].warm;
-  document.getElementById("list").innerHTML = D[day].x.map(([name, sr, note = "", mahdi], i) => `
-    <li class="${mahdi ? "swap" : ""}">
-      <span class="n">${fa(String(i + 1))}</span>
-      <div class="ex"><b>${esc(name)}</b>${note ? `<span>${esc(note)}</span>` : ""}${mahdi ? `<span class="m">مهدی: ${esc(mahdi === "—" ? "هوازی" : mahdi)}</span>` : ""}</div>
-      <span class="sr">${fa(sr)}</span>
-    </li>`).join("");
+  document.getElementById("list").innerHTML = D[day].x.map((ex, i) => {
+    const l = read(key(week, day, ex.id)) || {};
+    return `<li class="${ex.mh ? "swap" : ""}">
+      <span class="n">${fa(i + 1)}</span>
+      <div class="ex"><b>${esc(ex.n)}</b>${ex.note ? `<span>${esc(ex.note)}</span>` : ""}${ex.mh ? `<span class="m">مهدی: ${esc(ex.mh === "—" ? "هوازی" : ex.mh)}</span>` : ""}</div>
+      <span class="sr">${fa(ex.sr)}</span>
+      ${ex.nw ? "" : `<div class="log">
+        <input data-id="${ex.id}" data-f="kg" inputmode="decimal" placeholder="کیلو" aria-label="وزنه ${esc(ex.n)}" value="${esc(l.kg || "")}">
+        <input data-id="${ex.id}" data-f="r" inputmode="numeric" placeholder="تکرار" aria-label="تکرار ${esc(ex.n)}" value="${esc(l.r || "")}">
+        <span class="hint">${hint(ex, last(day, ex))}</span>
+      </div>`}
+    </li>`;
+  }).join("");
   history.replaceState(null, "", "#" + day);
 }
-document.querySelectorAll(".seg button").forEach(b => b.onclick = () => show(b.dataset.d));
+
+document.querySelectorAll("[data-d]").forEach(b => b.onclick = () => show(b.dataset.d));
+document.getElementById("weeks").onclick = e => {
+  const w = +e.target.dataset.w; if (!w) return;
+  week = w; set("gym2|ui", JSON.stringify({ week })); show();
+};
+document.getElementById("list").addEventListener("input", e => {
+  const { id, f } = e.target.dataset; if (!id) return;
+  const k = key(week, day, id), l = read(k) || {};
+  l[f] = e.target.value.trim(); set(k, JSON.stringify(l));
+});
 show(location.hash.slice(1));
 </script>
 </body>
