@@ -1,10 +1,16 @@
 # gym-plan
 
-A mobile workout tracker in Persian (RTL) for a 4-week, 3-day full-body program. It is one static HTML file, with no build step and no backend.
+A mobile workout tracker in Persian (RTL) for a 4-week, 3-day full-body program. Static HTML files with no build step and no backend.
 
-**Live:** https://mohammad78sd.github.io/gym-plan/
+**Live (Month 2):** https://mohammad78sd.github.io/gym-plan/  
+**Month 1 Archive:** https://mohammad78sd.github.io/gym-plan/month1.html
 
-## Features
+## Pages
+
+- **Month 2 (`index.html`, `month2.html`):** Mohammad's month 2 workout tracker with weight & rep logging, progressive overload hints based on month 1 logs, and exercise swaps alongside Mahdi.
+- **Month 1 (`month1.html`):** The original 4-week full-body tracker for Mohammad & Mahdi with rest timer, animations, and Gist sync.
+
+## Features (Month 1)
 
 - **Choose who and when:** person (محمد / مهدی), week (1–4) and day (A / B / C), plus an info tab
 - **Exercise cards:** sets, reps, rest, notes and a looping SVG animation of each movement
